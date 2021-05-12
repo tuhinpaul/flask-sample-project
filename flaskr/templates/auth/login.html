@@ -1,0 +1,86 @@
+{% extends 'default_layout.html' %}
+
+{% block head_extra %}
+<style>
+    input {
+        max-width: 25em;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center">
+    <div class="d-inline-flex flex-column">
+        <div class="container-sm my-4 p-4 bg-light rounded" id="loginform_container">
+            <h1 class="py-4">{% block title %}Log In{% endblock %}</h1>
+            <div class='form-text text-danger' v-if='loginformErrors' v-html='loginformErrors'></div>
+            <form method="post" id="loginform" v-if="!disable_form">
+                <div class="mb-3">
+                    <label class="form-label" for="username">Username</label>
+                    <input class="form-control" name="username" id="username" v-model="username" maxlength="20" size="25" required>
+                    <div class='form-text text-danger' v-if='usernameErrors' v-html='usernameErrors'></div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="password">Password</label>
+                    <input class="form-control" type="password" name="password" id="password" v-model="password" maxlength="20" size="25" required>
+                    <div class='form-text text-danger' v-if='passwordErrors' v-html="passwordErrors"></div>
+                </div>
+
+                <div class="mb-3 form-check" v-if="false">
+                    <label class="form-check-label" for="exampleCheck1">
+                        <input type="checkbox" class="form-check-input" id="remember">
+                        Remember me</label>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const loginRootComponent = {
+        delimiters: ['${', '}'],
+        methods: {
+            getErrors(key) {
+                const specificErrors = this.errors.filter((err) => key in err);
+                const errorHtmls = specificErrors.map((x) => `<div>${x[key]}</div>`);
+                return errorHtmls.join("");
+            }
+        },
+        data() {
+            return {
+                errors: {{ (errors if errors else [])|tojson|escape }},
+                disable_form: {{ (disable_form if disable_form else False)|tojson|escape }},
+                username: '{{ username|escape }}',
+                password: '{{ password|escape }}'
+            };
+        },
+        computed: {
+            loginformErrors() {
+                return this.getErrors('loginform');
+            },
+            usernameErrors() {
+                return this.getErrors('username');
+            },
+            passwordErrors() {
+                return this.getErrors('password');
+            }
+        },
+        watch: {
+            username(newVal, oldVal) {
+                // remove loginform and username errros
+                this.errors = this.errors.filter((err) => !('loginform' in err || 'username' in err));
+            },
+
+            password(newVal, oldVal) {
+                // remove loginform and password errors
+                this.errors = this.errors.filter((err) => !('loginform' in err || 'password' in err));
+            }
+        }
+    };
+    const loginApp = Vue.createApp(loginRootComponent);
+    const vm = loginApp.mount('#loginform_container');
+</script>
+{% endblock %}

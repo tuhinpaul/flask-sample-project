@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>{% block title %}{% endblock %} - sample Flask project</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ url_for('static', filename='images/favicon.png') }}">
+
+    <!-- Bootstrap 5.0 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/bootstrap.min.css') }}">
+
+    <!-- Vue.js 3.0.11 -->
+    <script src="{{ url_for('static', filename='js/3rd/vue.global.prod.js') }}"></script>
+    <!-- Axios 0.21.1 -->
+    <script src="{{ url_for('static', filename='js/3rd/axios.min.js') }}"></script>
+
+    <!-- Leaflet 1.7.1 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/leaflet.css') }}">
+    <script src="{{ url_for('static', filename='js/3rd/leaflet.js') }}"></script>
+    <!-- Leaflet MarkerCluster 1.4.1 -->
+    <!-- Using Leaflet MarkerCluster: https://github.com/Leaflet/Leaflet.markercluster#using-the-plugin -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/MarkerCluster.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/MarkerCluster.Default.css') }}">
+    <script src="{{ url_for('static', filename='js/3rd/leaflet.markercluster.js') }}"></script>
+
+    <!-- Lodash 4.17.21 -->
+    <script src="{{ url_for('static', filename='js/3rd/lodash.min.js') }}"></script>
+    <script>
+        const _u = _.noConflict();
+    </script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Leckerli+One&display=swap">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/default.css') }}">
+
+    {% block head_extra %}{% endblock %}
+</head>
+
+<body>
+    <header id="layoutHeader">
+        <section class="site-masthead">
+            <div class="container-fluid">
+                <div class="site-title py-2 display-4 text-center">Flask Sample Project</div>
+                <div class="p-2 text-end text-primary" v-html="greeting"></div>
+            </div>
+        </section>
+
+        <nav id='topNav'>
+            <ul class="nav nav-pills justify-content-center">
+                <li class="nav-item">
+                    <a :class="['nav-link', {active: isActive('home')}]" aria-current="page" href="{{ url_for('home') }}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a :class="['nav-link', {active: isActive('test')}, 'disabled']" href="{{ url_for('test') }}" tabindex="-1" aria-disabled="true">Test</a>
+                </li>
+                <li class="nav-item" v-if="!username">
+                    <a :class="['nav-link', {active: isActive('login')}]" href="{{ url_for('login') }}">Log In</a>
+                </li>
+                <li class="nav-item" v-if="username">
+                    <a :class="['nav-link', {active: isActive('logout')}]" href="{{ url_for('logout') }}">Log Out</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    {% block content %}{% endblock %}
+
+    <footer>
+
+    </footer>
+
+    <!-- Bootstrap 5.0 -->
+    <script src="{{ url_for('static', filename='js/3rd/bootstrap.bundle.min.js') }}"></script>
+    <script>
+        const layoutHeaderRootComponent = {
+            delimiters: ['${', '}'],
+            data() {
+                return {
+                    username: "{{ (session.get('username') or '')|escape }}"
+                };
+            },
+            methods: {
+                isActive(endpoint) {
+                    return endpoint === '{{ request.endpoint }}';
+                }
+            },
+            computed: {
+                greeting() {
+                    return this.username ? 'Hello ' + this.username + '!' : '';
+                }
+            }
+        };
+        const layoutHeaderApp = Vue.createApp(layoutHeaderRootComponent);
+        const layoutHeaderVm = layoutHeaderApp.mount('#layoutHeader');
+    </script>
+</body>
+
+</html>

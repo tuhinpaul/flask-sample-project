@@ -1,0 +1,26 @@
+
+/* Leaflet default cluster icon */
+.default-cluster-icon {
+    border-radius: 15px;
+    background-image: radial-gradient(circle, #ff8000 50%, #ffa64d 55%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.default-cluster-icon .cluster-count {
+    color: midnightblue;
+}
+
+.site-masthead {
+    background-color: #e3f2fd;
+}
+
+.site-title {
+    font-family: 'Leckerli One', cursive;
+    color: #F80;
+}
+
+.site-masthead + nav {
+    padding: .5rem;
+    border-bottom: #e3f2fd solid 1px;
+}

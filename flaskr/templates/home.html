@@ -1,0 +1,68 @@
+{% extends 'default_layout.html' %}
+
+{% block title %}Hazard Map{% endblock %}
+
+{% block head_extra %}
+<!-- Render Map -->
+<script src="{{ url_for('static', filename='js/map-render.js') }}"></script>
+
+<style>
+    #eventMap {
+        min-height: 600px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="justify-content-center">
+    <div class="container-lg py-2">
+        <div id="eventApp" class="row">
+            <div class="col-sm-9">
+                <div id="eventMap" class="rounded"></div>
+            </div>
+            <div class="col-sm-3 py-4">
+                <h4 v-if="name" class="text-success">${name}</h4>
+                <div v-if="latitude">${'Latitude: ' + latitude}</div>
+                <div v-if="longitude">${'Longitude: ' + longitude}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const eventRootComponent = {
+        delimiters: ['${', '}'],
+        data() {
+            return {
+                eventMapObject: null,
+                name: '',
+                latitude: '',
+                longitude: ''
+            };
+        },
+        methods: {
+            onMarkerClick(d) {
+                this.name = _u.get(d, 'name');
+                this.latitude = _u.get(d, 'latitude');
+                this.longitude = _u.get(d, 'longitude');
+            }
+        },
+        mounted() {
+            axios
+                .get('{{ url_for("get-events") }}')
+				.then((response) => {
+				    this.eventMapObject = renderMap(
+                        'eventMap',
+                        response.data,
+                        (myMap, eventData) => {
+                            return addEventMapLayers(myMap, eventData, this.onMarkerClick);
+                        });
+                });
+        }
+    };
+    const eventApp = Vue.createApp(eventRootComponent);
+    const vm = eventApp.mount('#eventApp');
+</script>
+
+{% endblock %}

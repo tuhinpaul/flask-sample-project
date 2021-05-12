@@ -1,0 +1,9 @@
+{% extends 'default_layout.html' %}
+
+{% block content %}
+<div class="container-sm my-4 p-4 bg-light rounded">
+    <h1 class="text-danger">{% block title %}{{err.code}} {{ err.name }}{% endblock %}</h1>
+    <p>{{ err.description }}</p>
+</div>
+{% endblock %}
+

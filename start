@@ -1,0 +1,17 @@
+#!/bin/bash -x
+
+export FLASK_APP=flaskr
+export FLASK_ENV=development
+
+# to initialize database, set FLASK_SAMPLE_INITIALIZE_DATABASE to truthy
+# export FLASK_SAMPLE_INITIALIZE_DATABASE=true
+flask run
+
+# TODO: create database in postgresql
+# docker build -t flask-sample-project:latest .
+# docker run -d -p 5000:5000 --name flask-sample-project flask-sample-project
+
+
+# docker kill flask-sample-project
+# docker rm flask-sample-project
+# docker run --network=host -d --name flask-sample-project flask-sample-project

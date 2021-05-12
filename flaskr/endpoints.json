@@ -1,0 +1,73 @@
+[
+    {
+        "rule": "/",
+        "options": {
+            "endpoint": "home"
+        },
+        "auth": {
+            "login_required": false,
+            "roles_required": []
+        },
+        "controller": "flaskr.controllers.main.MainController.home"
+    },
+    {
+        "rule": "/login",
+        "options": {
+            "endpoint": "login",
+            "methods": ["GET", "POST"]
+        },
+        "auth": {
+            "login_required": false,
+            "roles_required": []
+        },
+        "controller": "flaskr.controllers.auth.AuthController.login"
+    },
+    {
+        "rule": "/logout",
+        "options": {
+            "endpoint": "logout",
+            "methods": ["GET"]
+        },
+        "auth": {
+            "login_required": true,
+            "roles_required": []
+        },
+        "controller": "flaskr.controllers.auth.AuthController.logout"
+    },
+    {
+        "rule": "/test",
+        "options": {
+            "endpoint": "test",
+            "methods": ["GET", "POST"]
+        },
+        "auth": {
+            "login_required": true,
+            "roles_required": ["admin"]
+        },
+        "controller": "flaskr.controllers.main.MainController.test"
+    },
+    {
+        "rule": "/event",
+        "options": {
+            "endpoint": "get-events",
+            "methods": ["GET"]
+        },
+        "auth": {
+            "login_required": false,
+            "roles_required": []
+        },
+        "controller": "flaskr.controllers.event.EventController.get"
+    },
+    {
+        "rule": "/event",
+        "options": {
+            "endpoint": "post-event",
+            "methods": ["POST"]
+        },
+        "auth": {
+            "login_required": true,
+            "roles_required": []
+        },
+        "controller": "flaskr.controllers.event.EventController.post"
+    }
+]
